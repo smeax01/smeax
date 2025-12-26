@@ -1,0 +1,86 @@
+<!DOCTYPE html><html lang="fr" class="scroll-smooth"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Bienvenue sur mon Portfolio Astro</title><meta name="description" content="Portfolio de Smeax - Développeur Web Frontend &#38; Semi-Backend"><meta name="theme-color" content="#020617"><link rel="manifest" href="/smeax/manifest.json"><link rel="icon" type="image/png" href="/smeax/icon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/smeax/_astro/ClientRouter.astro_astro_type_script_index_0_lang.QW52Ox2j.js"></script><!-- Open Graph --><meta property="og:title" content="Bienvenue sur mon Portfolio Astro"><meta property="og:description" content="Portfolio de Smeax - Développeur Web Frontend &#38; Semi-Backend"><meta property="og:type" content="website"><meta property="og:image" content="/smeax/project-showcase.png"><!-- Lucide Icons --><script src="https://unpkg.com/lucide@latest"></script><script>
+    // Theme initialization (blocking to prevent flash)
+    (function() {
+      const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      if (theme === 'light') {
+        document.documentElement.classList.add('light');
+      } else {
+        document.documentElement.classList.remove('light');
+      }
+    })();
+  </script><link rel="stylesheet" href="/smeax/_astro/hello-markdown.WYYvu2Zd.css">
+<style>.prose-custom{color:var(--text-main);line-height:1.7}.prose-custom h2{font-size:1.875rem;font-weight:700;margin-top:2.5rem;margin-bottom:1.25rem;color:var(--text-main)}.prose-custom h3{font-size:1.5rem;font-weight:600;margin-top:2rem;margin-bottom:1rem;color:var(--text-main)}.prose-custom p{margin-bottom:1.25rem}.prose-custom ul,.prose-custom ol{margin-bottom:1.25rem;padding-left:1.5rem}.prose-custom ul{list-style-type:disc}.prose-custom ol{list-style-type:decimal}.prose-custom li{margin-bottom:.5rem}.prose-custom blockquote{border-left:4px solid var(--border-color);padding-left:1rem;font-style:italic;color:var(--text-muted);margin:1.5rem 0}.prose-custom code{background:#ffffff0d;padding:.2rem .4rem;border-radius:.3rem;font-size:.9em}.prose-custom pre{background:#0f172a!important;padding:1rem;border-radius:.75rem;overflow-x:auto;margin:1.5rem 0;border:1px solid rgba(255,255,255,.1)}
+</style></head> <body class="antialiased font-sans"> <div class="absolute top-4 left-0 right-0 z-50 flex justify-center w-full px-2 md:px-4 pointer-events-none"> <nav class="pointer-events-auto w-full max-w-[98%] md:max-w-7xl h-14 card-bg rounded-xl px-4 flex items-center justify-between shadow-none transition-all duration-300"> <!-- Left: Logo --> <a href="/smeax/?lang=fr" class="flex items-center gap-3 py-2 px-2 -ml-2 rounded-lg hover:bg-white/5 transition-colors group shrink-0"> <img src="/smeax/icon.png" alt="Smeax" class="w-8 h-8 object-contain"> <span class="font-bold text-adaptive tracking-tight group-hover:text-blue-500 transition-colors block">Smeax</span> </a> <!-- Center: Nav Links (Desktop) --> <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:flex items-center gap-1"> <a href="/smeax/?lang=fr" class="nav-link group nav-link-active"> <i data-lucide="home" class="w-4 h-4 group-hover:scale-110 transition-transform"></i> <span>Accueil</span> </a><a href="/smeax/gallery?lang=fr" class="nav-link group nav-link-inactive"> <i data-lucide="layout-grid" class="w-4 h-4 group-hover:scale-110 transition-transform"></i> <span>Galerie</span> </a><a href="/smeax/projects?lang=fr" class="nav-link group nav-link-inactive"> <i data-lucide="flask-conical" class="w-4 h-4 group-hover:scale-110 transition-transform"></i> <span>Projets</span> </a><a href="/smeax/contact?lang=fr" class="nav-link group nav-link-inactive"> <i data-lucide="mail" class="w-4 h-4 group-hover:scale-110 transition-transform"></i> <span>Contact</span> </a> </div> <!-- Right: Actions --> <div class="flex items-center gap-3 shrink-0"> <!-- Mobile Menu Button --> <button onclick="toggleMobileMenu()" class="md:hidden flex items-center justify-center w-8 h-8 rounded-lg text-muted-adaptive hover:text-adaptive hover:bg-white/10 transition-colors" aria-label="Toggle menu"> <i data-lucide="menu" class="w-5 h-5"></i> </button> <!-- Lang Selector --> <div class="relative group hidden md:block"> <button class="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-medium text-muted-adaptive hover:text-adaptive hover:bg-white/10 transition-colors"> <i data-lucide="languages" class="w-3.5 h-3.5"></i> <span id="current-lang-label">FR</span> <i data-lucide="chevron-down" class="w-3 h-3 opacity-50"></i> </button> <!-- Dropdown --> <div class="absolute right-0 top-full mt-2 w-24 card-bg border border-white/10 rounded-lg shadow-xl py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right z-50 pointer-events-auto"> <button onclick="setLanguage('fr')" class="flex items-center gap-2 w-full px-3 py-2 text-xs text-muted-adaptive hover:text-adaptive hover:bg-white/5 text-left"> <span>🇫🇷</span> FR
+</button> <button onclick="setLanguage('en')" class="flex items-center gap-2 w-full px-3 py-2 text-xs text-muted-adaptive hover:text-adaptive hover:bg-white/5 text-left"> <span>🇬🇧</span> EN
+</button> </div> </div> <div class="w-px h-4 bg-white/10 hidden md:block"></div> <!-- Theme Toggle --> <button onclick="toggleTheme()" class="hidden md:flex items-center justify-center w-8 h-8 rounded-lg text-muted-adaptive hover:text-adaptive hover:bg-white/10 transition-colors" aria-label="Toggle theme"> <i data-lucide="moon" data-theme-icon class="w-4 h-4"></i> </button> </div> </nav> </div> <div id="mobile-menu" class="mobile-menu card-bg border-l"> <div class="flex flex-col h-full"> <!-- Header --> <div class="flex items-center justify-between p-4 border-b border-white/10"> <span class="font-bold text-adaptive">Menu</span> <button onclick="toggleMobileMenu()" class="flex items-center justify-center w-8 h-8 rounded-lg text-muted-adaptive hover:text-adaptive hover:bg-white/10 transition-colors" aria-label="Close menu"> <i data-lucide="x" class="w-5 h-5"></i> </button> </div> <!-- Nav Links --> <nav class="flex-1 p-4 space-y-2"> <a href="/smeax/?lang=fr" onclick="toggleMobileMenu()" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all nav-link-active"> <i data-lucide="home" class="w-5 h-5"></i> <span class="font-medium">Accueil</span> </a><a href="/smeax/gallery?lang=fr" onclick="toggleMobileMenu()" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all nav-link-inactive"> <i data-lucide="layout-grid" class="w-5 h-5"></i> <span class="font-medium">Galerie</span> </a><a href="/smeax/projects?lang=fr" onclick="toggleMobileMenu()" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all nav-link-inactive"> <i data-lucide="flask-conical" class="w-5 h-5"></i> <span class="font-medium">Projets</span> </a><a href="/smeax/contact?lang=fr" onclick="toggleMobileMenu()" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all nav-link-inactive"> <i data-lucide="mail" class="w-5 h-5"></i> <span class="font-medium">Contact</span> </a> </nav> <!-- Bottom Actions --> <div class="p-4 border-t border-white/10 space-y-3"> <button onclick="toggleTheme()" class="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-muted-adaptive hover:text-adaptive hover:bg-white/10 transition-colors"> <i data-lucide="moon" data-theme-icon class="w-5 h-5"></i> <span class="font-medium">Thème</span> </button> <div class="flex gap-2"> <button onclick="setLanguage('fr')" class="flex-1 px-3 py-2 rounded-lg text-sm bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors">
+🇫🇷 FR
+</button> <button onclick="setLanguage('en')" class="flex-1 px-3 py-2 rounded-lg text-sm bg-white/5 text-muted-adaptive hover:bg-white/10 transition-colors">
+🇬🇧 EN
+</button> </div> </div> </div> </div> <div id="content-wrap"> <main class="relative w-full max-w-7xl mx-auto px-4 md:px-6 pt-32 pb-8 overflow-x-hidden">  <article class="max-w-3xl mx-auto py-12 px-4 markdown-content"> <img src="/smeax/project-showcase.png" alt="Bienvenue sur mon Portfolio Astro" class="w-full h-64 object-cover rounded-2xl mb-8 border border-white/10"> <div class="space-y-4 mb-12"> <h1 class="text-4xl md:text-5xl font-bold text-adaptive tracking-tight"> Bienvenue sur mon Portfolio Astro </h1> <p class="text-xl text-muted-adaptive font-medium"> Découvrez comment utiliser Markdown pour ajouter des articles ou des pages à votre site. </p> <div class="flex items-center gap-4 text-sm text-muted-adaptive"> <time datetime="2025-12-26T00:00:00.000Z">26 décembre 2025</time> </div> </div> <div class="prose-custom"> <h2 id="introduction">Introduction</h2>
+<p>Félicitations ! Vous venez d’intégrer le support <strong>Markdown</strong> à votre projet Smeax. Markdown vous permet d’écrire du contenu riche de manière simple et intuitive, sans avoir à toucher au code HTML ou JavaScript.</p>
+<h3 id="pourquoi-utiliser-markdown">Pourquoi utiliser Markdown ?</h3>
+<ol>
+<li><strong>Simplicité</strong> : Pas besoin de balises HTML complexes.</li>
+<li><strong>Vitesse</strong> : Idéal pour écrire des articles de blog ou de la documentation.</li>
+<li><strong>Flexibilité</strong> : Vous pouvez mélanger Markdown et composants Astro si besoin.</li>
+</ol>
+<h3 id="exemple-de-mise-en-forme">Exemple de mise en forme</h3>
+<p>Voici une liste des fonctionnalités supportées :</p>
+<ul>
+<li><strong>Gras</strong> et <em>Italique</em></li>
+<li><a href="https://astro.build">Liens</a></li>
+<li>Listes à puces et numérotées</li>
+<li>Citations</li>
+</ul>
+<blockquote>
+<p>“Le code est comme l’humour. Quand vous devez l’expliquer, c’est qu’il est mauvais.”</p>
+</blockquote>
+<h3 id="code-snippets">Code Snippets</h3>
+<p>Vous pouvez également intégrer du code :</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="javascript"><code><span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> helloWorld</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#E1E4E8">  console.</span><span style="color:#B392F0">log</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"Bonjour Smeax !"</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>N’hésitez pas à créer d’autres fichiers <code>.md</code> dans le dossier <code>src/pages/</code> pour ajouter de nouvelles pages !</p> </div> </article>  </main> <footer class="mt-16 pt-8 border-t border-white/5 w-full max-w-7xl mx-auto px-4 md:px-6"> <div class="pb-6 flex flex-col sm:flex-row items-center justify-between gap-4"> <!-- Left: Text Info --> <div class="flex flex-col sm:items-start items-center gap-1 text-sm text-muted-adaptive"> <span>Site développé par Smeax</span> <span class="flex items-center gap-1 text-xs opacity-70"> <i data-lucide="scale" class="w-3 h-3"></i> <span>Sous licence MIT. Code sur GitHub.</span> </span> </div> <!-- Right: Social Icons --> <div class="flex gap-5"> <a href="#" class="text-muted-adaptive hover:text-blue-500 transition-colors" aria-label="github"> <i data-lucide="github" class="w-5 h-5"></i> </a><a href="#" class="text-muted-adaptive hover:text-[#5865F2] transition-colors" aria-label="gamepad-2"> <i data-lucide="gamepad-2" class="w-5 h-5"></i> </a><a href="#" class="text-muted-adaptive hover:text-[#1DA1F2] transition-colors" aria-label="twitter"> <i data-lucide="twitter" class="w-5 h-5"></i> </a><a href="#" class="text-muted-adaptive hover:text-red-500 transition-colors" aria-label="youtube"> <i data-lucide="youtube" class="w-5 h-5"></i> </a> </div> </div> </footer> </div> <script>
+    function initApp() {
+      // Re-initialize Lucide
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+
+      // Sync theme icons
+      const isLight = document.documentElement.classList.contains('light');
+      const icons = document.querySelectorAll('[data-theme-icon]');
+      icons.forEach(icon => {
+        icon.setAttribute('data-lucide', isLight ? 'sun' : 'moon');
+      });
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    // Initial load
+    document.addEventListener('DOMContentLoaded', initApp);
+    // After View Transition
+    document.addEventListener('astro:after-swap', initApp);
+
+    // Theme toggle
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.classList.toggle('light');
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+      initApp();
+    };
+
+    // Mobile menu
+    window.toggleMobileMenu = function() {
+      const menu = document.getElementById('mobile-menu');
+      if (menu) {
+        menu.classList.toggle('active');
+      }
+    };
+
+    // Language switcher
+    window.setLanguage = function(newLang) {
+      localStorage.setItem('lang', newLang);
+      const url = new URL(window.location.href);
+      url.searchParams.set('lang', newLang);
+      window.location.href = url.pathname + url.search;
+    };
+  </script> </body> </html> 
