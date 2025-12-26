@@ -10,10 +10,10 @@ const { activePage, lang = 'fr' } = Astro.props;
 const tr = t(lang);
 
 const navLinks = [
-  { href: `/?lang=${lang}`, page: 'home', icon: 'home', label: tr('nav_home') },
-  { href: `/gallery?lang=${lang}`, page: 'gallery', icon: 'layout-grid', label: tr('nav_gallery') },
-  { href: `/projects?lang=${lang}`, page: 'projects', icon: 'flask-conical', label: tr('nav_projects') },
-  { href: `/contact?lang=${lang}`, page: 'contact', icon: 'mail', label: tr('nav_contact') },
+  { href: `${import.meta.env.BASE_URL}/?lang=${lang}`, page: 'home', icon: 'home', label: tr('nav_home') },
+  { href: `${import.meta.env.BASE_URL}/gallery?lang=${lang}`, page: 'gallery', icon: 'layout-grid', label: tr('nav_gallery') },
+  { href: `${import.meta.env.BASE_URL}/projects?lang=${lang}`, page: 'projects', icon: 'flask-conical', label: tr('nav_projects') },
+  { href: `${import.meta.env.BASE_URL}/contact?lang=${lang}`, page: 'contact', icon: 'mail', label: tr('nav_contact') },
 ] as const;
 ---
 

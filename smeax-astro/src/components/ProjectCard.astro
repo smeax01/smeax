@@ -67,7 +67,7 @@ const colors = colorMap[project.primaryColor] || colorMap.blue;
     {/* Project Image */}
     <div class:list={["rounded-xl overflow-hidden border border-white/5", reverse ? "order-2 md:order-1" : "order-2 md:order-2"]}>
       <img 
-        src={project.image} 
+        src={project.image.startsWith('/') ? `${import.meta.env.BASE_URL}${project.image}` : project.image} 
         alt={project.title} 
         class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
         loading="lazy"
@@ -103,7 +103,7 @@ const colors = colorMap[project.primaryColor] || colorMap.blue;
       <div class="flex gap-3 pt-2">
         {project.demoUrl && (
           <a 
-            href={project.demoUrl} 
+            href={project.demoUrl.startsWith('/') ? `${import.meta.env.BASE_URL}${project.demoUrl}` : project.demoUrl} 
             class={`flex items-center gap-2 px-4 py-2 rounded-lg ${colors.button} ${colors.buttonHover} text-white text-sm font-medium transition-colors`}
           >
             <i data-lucide="external-link" class="w-4 h-4"></i>

@@ -5,11 +5,10 @@ import node from '@astrojs/node';
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'server',
+  site: 'https://smeax01.github.io',
+  base: '/smeax',
+  output: 'static',
   vite: {
     plugins: [tailwindcss()]
-  },
-  adapter: node({
-    mode: 'standalone'
-  })
+  }
 });

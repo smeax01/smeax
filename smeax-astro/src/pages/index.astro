@@ -52,7 +52,7 @@ const featuredProject = projects.find(p => p.featured) || projects[0];
         <i data-lucide="star" class="w-5 h-5 text-blue-500"></i>
         <span>{tr('featured_title')}</span>
       </h2>
-      <a href={`/projects?lang=${lang}`} class="text-sm text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1">
+      <a href={`${import.meta.env.BASE_URL}/projects?lang=${lang}`} class="text-sm text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1">
         <span>{tr('view_all_projects')}</span>
         <i data-lucide="arrow-right" class="w-4 h-4"></i>
       </a>

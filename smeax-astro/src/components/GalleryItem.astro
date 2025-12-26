@@ -19,7 +19,7 @@ const { id, title, category, thumbnail, fullSize, description } = Astro.props;
   data-description={`${category} - ${description}`}
 >
   <img 
-    src={thumbnail} 
+    src={thumbnail.startsWith('/') ? `${import.meta.env.BASE_URL}${thumbnail}` : thumbnail} 
     alt={title} 
     class="w-full h-full object-cover"
     loading="lazy"
