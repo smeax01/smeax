@@ -1,0 +1,85 @@
+---
+import type { Skill } from '../data/skills';
+import { t, type Language } from '../i18n/translations';
+
+interface Props {
+  skill: Skill;
+  lang?: Language;
+}
+
+const { skill, lang = 'fr' } = Astro.props;
+const tr = t(lang);
+
+const colorMap: Record<string, { bg: string; hoverBorder: string; iconBg: string; iconHoverBg: string; iconColor: string }> = {
+  yellow: {
+    bg: 'bg-midnight-light',
+    hoverBorder: 'hover:border-yellow-500/30',
+    iconBg: 'bg-yellow-500/10',
+    iconHoverBg: 'group-hover:bg-yellow-500/20',
+    iconColor: 'text-yellow-400',
+  },
+  cyan: {
+    bg: 'bg-midnight-light',
+    hoverBorder: 'hover:border-cyan-500/30',
+    iconBg: 'bg-cyan-500/10',
+    iconHoverBg: 'group-hover:bg-cyan-500/20',
+    iconColor: 'text-cyan-400',
+  },
+  green: {
+    bg: 'bg-midnight-light',
+    hoverBorder: 'hover:border-green-500/30',
+    iconBg: 'bg-green-500/10',
+    iconHoverBg: 'group-hover:bg-green-500/20',
+    iconColor: 'text-green-400',
+  },
+  blue: {
+    bg: 'bg-midnight-light',
+    hoverBorder: 'hover:border-blue-500/30',
+    iconBg: 'bg-blue-500/10',
+    iconHoverBg: 'group-hover:bg-blue-500/20',
+    iconColor: 'text-blue-400',
+  },
+  orange: {
+    bg: 'bg-midnight-light',
+    hoverBorder: 'hover:border-orange-500/30',
+    iconBg: 'bg-orange-500/10',
+    iconHoverBg: 'group-hover:bg-orange-500/20',
+    iconColor: 'text-orange-400',
+  },
+  sky: {
+    bg: 'bg-midnight-light',
+    hoverBorder: 'hover:border-sky-500/30',
+    iconBg: 'bg-sky-500/10',
+    iconHoverBg: 'group-hover:bg-sky-500/20',
+    iconColor: 'text-sky-400',
+  },
+  red: {
+    bg: 'bg-midnight-light',
+    hoverBorder: 'hover:border-red-500/30',
+    iconBg: 'bg-red-500/10',
+    iconHoverBg: 'group-hover:bg-red-500/20',
+    iconColor: 'text-red-400',
+  },
+};
+
+const colors = colorMap[skill.color] || colorMap.blue;
+const levelText = tr(skill.level as 'expert' | 'advanced' | 'intermediate');
+---
+
+<div class={`group relative p-6 rounded-2xl card-bg ${colors.hoverBorder} transition-all cursor-pointer`}>
+  <div class="flex flex-col items-center gap-3 text-center">
+    <div class={`w-12 h-12 flex items-center justify-center rounded-xl ${colors.iconBg} ${colors.iconHoverBg} transition-colors`}>
+      {skill.iconType === 'svg' ? (
+        <svg class={`w-7 h-7 ${colors.iconColor}`} viewBox="0 0 24 24" fill="currentColor">
+          <Fragment set:html={skill.icon} />
+        </svg>
+      ) : (
+        <i data-lucide={skill.icon} class={`w-7 h-7 ${colors.iconColor}`}></i>
+      )}
+    </div>
+    <div>
+      <h3 class="font-semibold text-adaptive">{skill.name}</h3>
+      <p class="text-xs text-muted-adaptive mt-1">{levelText}</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { projects } from '../data/projects';
+import { t, type Language } from '../i18n/translations';
+
+const langParam = Astro.url.searchParams.get('lang') as Language | null;
+const lang: Language = (langParam && (langParam === 'en' || langParam === 'fr')) ? langParam : 'fr';
+const tr = t(lang);
+---
+
+<BaseLayout 
+  title={`${tr('nav_projects')} - Smeax Portfolio`} 
+  activePage="projects" 
+  lang={lang}
+  description={tr('projects_subtitle')}
+>
+  <section class="max-w-4xl mx-auto text-center mb-16 space-y-4">
+    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-blue-500/20 bg-blue-500/10 text-blue-400 text-xs font-medium tracking-wide">
+      <i data-lucide="flask-conical" class="w-3.5 h-3.5"></i>
+      <span class="uppercase">{tr('nav_projects')}</span>
+    </div>
+    
+    <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-adaptive pb-2 leading-tight">
+      {tr('projects_title')} <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-white">{tr('projects_highlight')}</span>
+    </h1>
+    
+    <p class="text-muted-adaptive text-lg max-w-2xl mx-auto">
+      {tr('projects_subtitle')}
+    </p>
+  </section>
+
+  <section class="space-y-8">
+    {projects.map((project, index) => (
+      <ProjectCard project={project} reverse={index % 2 !== 0} lang={lang} />
+    ))}
+  </section>
+</BaseLayout>

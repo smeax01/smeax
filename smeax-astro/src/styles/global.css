@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-main: #020617;
+    --text-main: #e2e8f0;
+    --card-bg: rgba(15, 23, 42, 0.9);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --text-muted: #94a3b8;
+  }
+
+  :root.light {
+    --bg-main: #f8fafc;
+    --text-main: #0f172a;
+    --card-bg: rgba(255, 255, 255, 0.8);
+    --border-color: rgba(0, 0, 0, 0.1);
+    --text-muted: #475569;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply antialiased selection:bg-blue-500/30 selection:text-blue-200;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+@layer components {
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Mobile menu animation */
+  .mobile-menu {
+    @apply fixed top-0 right-0 h-full w-64 z-50 transition-transform duration-300 transform translate-x-full;
+  }
+
+  .mobile-menu.active {
+    @apply translate-x-0;
+  }
+
+  /* Standardized gray-blue background for all interactive components */
+  .card-bg {
+    background-color: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    transition: all 0.3s ease;
+  }
+
+  .text-adaptive {
+    color: var(--text-main);
+  }
+
+  .text-muted-adaptive {
+    color: var(--text-muted);
+  }
+
+  .gallery-item {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1;
+    cursor: pointer;
+  }
+
+  .gallery-item img {
+    transition: transform 0.5s ease;
+  }
+
+  .gallery-item:hover img {
+    transform: scale(1.1);
+  }
+
+  /* Nav link states */
+  .nav-link {
+    @apply flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all;
+  }
+
+  .nav-link-active {
+    @apply text-white bg-white/10;
+  }
+  
+  :root.light .nav-link-active {
+    @apply text-blue-600 bg-blue-500/10;
+  }
+
+  .nav-link-inactive {
+    color: var(--text-muted);
+  }
+
+  .nav-link-inactive:hover {
+    color: var(--text-main);
+    background-color: var(--border-color);
+  }
+}

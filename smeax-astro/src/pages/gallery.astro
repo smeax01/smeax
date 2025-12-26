@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import GalleryItem from '../components/GalleryItem.astro';
+import { galleryItems } from '../data/projects';
+import { t, type Language } from '../i18n/translations';
+
+const langParam = Astro.url.searchParams.get('lang') as Language | null;
+const lang: Language = (langParam && (langParam === 'en' || langParam === 'fr')) ? langParam : 'fr';
+const tr = t(lang);
+---
+
+<BaseLayout 
+  title={`${tr('nav_gallery')} - Smeax Portfolio`} 
+  activePage="gallery" 
+  lang={lang}
+  description={tr('gallery_subtitle')}
+>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" slot="head" />
+  
+  <section class="max-w-4xl mx-auto text-center mb-16 space-y-4">
+    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-blue-500/20 bg-blue-500/10 text-blue-400 text-xs font-medium tracking-wide">
+      <i data-lucide="image" class="w-3.5 h-3.5"></i>
+      <span class="uppercase">{tr('nav_gallery')}</span>
+    </div>
+
+    <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-adaptive pb-2 leading-tight">
+      {tr('gallery_title')} <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-white">{tr('gallery_highlight')}</span>
+    </h1>
+
+    <p class="text-muted-adaptive text-lg max-w-2xl mx-auto">
+      {tr('gallery_subtitle')}
+    </p>
+  </section>
+
+  <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {galleryItems.map(item => (
+      <GalleryItem {...item} />
+    ))}
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js" is:inline></script>
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.GLightbox) {
+        window.GLightbox({
+          touchNavigation: true,
+          loop: true,
+          autoplayVideos: true,
+          skin: 'clean',
+          closeButton: true,
+          closeOnOutsideClick: true
+        });
+      }
+    });
+  </script>
+</BaseLayout>

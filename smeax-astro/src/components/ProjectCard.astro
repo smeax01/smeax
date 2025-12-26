@@ -1,0 +1,125 @@
+---
+import type { Project } from '../data/projects';
+import { t, type Language } from '../i18n/translations';
+
+interface Props {
+  project: Project;
+  reverse?: boolean;
+  lang?: Language;
+}
+
+const { project, reverse = false, lang = 'fr' } = Astro.props;
+const tr = t(lang);
+
+const colorMap: Record<string, { border: string; button: string; buttonHover: string; tagBg: string; tagText: string }> = {
+  blue: {
+    border: 'hover:border-blue-500/30',
+    button: 'bg-blue-500',
+    buttonHover: 'hover:bg-blue-600',
+    tagBg: 'bg-blue-500/10',
+    tagText: 'text-blue-400',
+  },
+  cyan: {
+    border: 'hover:border-cyan-500/30',
+    button: 'bg-cyan-500',
+    buttonHover: 'hover:bg-cyan-600',
+    tagBg: 'bg-cyan-500/10',
+    tagText: 'text-cyan-400',
+  },
+  purple: {
+    border: 'hover:border-purple-500/30',
+    button: 'bg-purple-500',
+    buttonHover: 'hover:bg-purple-600',
+    tagBg: 'bg-purple-500/10',
+    tagText: 'text-purple-400',
+  },
+  green: {
+    border: 'hover:border-green-500/30',
+    button: 'bg-green-500',
+    buttonHover: 'hover:bg-green-600',
+    tagBg: 'bg-green-500/10',
+    tagText: 'text-green-400',
+  },
+  yellow: {
+    border: 'hover:border-yellow-500/30',
+    button: 'bg-yellow-500',
+    buttonHover: 'hover:bg-yellow-600',
+    tagBg: 'bg-yellow-500/10',
+    tagText: 'text-yellow-400',
+  },
+  pink: {
+    border: 'hover:border-pink-500/30',
+    button: 'bg-pink-500',
+    buttonHover: 'hover:bg-pink-600',
+    tagBg: 'bg-pink-500/10',
+    tagText: 'text-pink-400',
+  },
+};
+
+const colors = colorMap[project.primaryColor] || colorMap.blue;
+---
+
+<div class={`group relative p-6 md:p-8 rounded-2xl card-bg ${colors.border} transition-all duration-300 overflow-hidden`}>
+  {/* Background Glow Effect */}
+  <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+  <div class="grid md:grid-cols-2 gap-8 items-center">
+    
+    {/* Project Image */}
+    <div class:list={["rounded-xl overflow-hidden border border-white/5", reverse ? "order-2 md:order-1" : "order-2 md:order-2"]}>
+      <img 
+        src={project.image} 
+        alt={project.title} 
+        class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+        loading="lazy"
+      />
+    </div>
+    
+    {/* Project Info */}
+    <div class:list={["space-y-4", reverse ? "order-1 md:order-2" : "order-1 md:order-1"]}>
+      {/* Tags */}
+      <div class="flex items-center gap-2">
+        {project.tags.map((tag, i) => {
+          const tagColors = i === 0 ? colors : colorMap.purple;
+          return (
+            <span class={`px-3 py-1 rounded-full ${tagColors.tagBg} ${tagColors.tagText} text-xs font-medium`}>
+              {tag}
+            </span>
+          );
+        })}
+      </div>
+      
+      {/* Title & Description */}
+      <h3 class="text-2xl font-bold text-adaptive">{project.title}</h3>
+      <p class="text-muted-adaptive leading-relaxed">{project.description}</p>
+      
+      {/* Tech Stack */}
+      <div class="flex flex-wrap gap-2">
+        {project.tech.map((tech) => (
+          <span class="px-2 py-1 rounded bg-blue-500/10 text-blue-500 text-xs font-semibold">{tech}</span>
+        ))}
+      </div>
+      
+      {/* Actions */}
+      <div class="flex gap-3 pt-2">
+        {project.demoUrl && (
+          <a 
+            href={project.demoUrl} 
+            class={`flex items-center gap-2 px-4 py-2 rounded-lg ${colors.button} ${colors.buttonHover} text-white text-sm font-medium transition-colors`}
+          >
+            <i data-lucide="external-link" class="w-4 h-4"></i>
+            <span>{tr('view_project')}</span>
+          </a>
+        )}
+        {project.sourceUrl && (
+          <a 
+            href={project.sourceUrl} 
+            class="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-sm font-medium transition-colors"
+          >
+            <i data-lucide="github" class="w-4 h-4"></i>
+            <span>Code</span>
+          </a>
+        )}
+      </div>
+    </div>
+  </div>
+</div>

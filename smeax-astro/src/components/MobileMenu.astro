@@ -1,0 +1,78 @@
+---
+import { t, type Language } from '../i18n/translations';
+
+interface Props {
+  activePage: 'home' | 'gallery' | 'projects' | 'contact';
+  lang?: Language;
+}
+
+const { activePage, lang = 'fr' } = Astro.props;
+const tr = t(lang);
+
+const navLinks = [
+  { href: `/?lang=${lang}`, page: 'home', icon: 'home', label: tr('nav_home') },
+  { href: `/gallery?lang=${lang}`, page: 'gallery', icon: 'layout-grid', label: tr('nav_gallery') },
+  { href: `/projects?lang=${lang}`, page: 'projects', icon: 'flask-conical', label: tr('nav_projects') },
+  { href: `/contact?lang=${lang}`, page: 'contact', icon: 'mail', label: tr('nav_contact') },
+] as const;
+---
+
+<div id="mobile-menu" class="mobile-menu card-bg border-l">
+  <div class="flex flex-col h-full">
+    <!-- Header -->
+    <div class="flex items-center justify-between p-4 border-b border-white/10">
+      <span class="font-bold text-adaptive">{tr('menu')}</span>
+      <button 
+        onclick="toggleMobileMenu()" 
+        class="flex items-center justify-center w-8 h-8 rounded-lg text-muted-adaptive hover:text-adaptive hover:bg-white/10 transition-colors"
+        aria-label="Close menu"
+      >
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+    
+    <!-- Nav Links -->
+    <nav class="flex-1 p-4 space-y-2">
+      {navLinks.map((link) => (
+        <a 
+          href={link.href}
+          onclick="toggleMobileMenu()"
+          class:list={[
+            "flex items-center gap-3 px-4 py-3 rounded-lg transition-all",
+            activePage === link.page 
+              ? "nav-link-active" 
+              : "nav-link-inactive"
+          ]}
+        >
+          <i data-lucide={link.icon} class="w-5 h-5"></i>
+          <span class="font-medium">{link.label}</span>
+        </a>
+      ))}
+    </nav>
+    
+    <!-- Bottom Actions -->
+    <div class="p-4 border-t border-white/10 space-y-3">
+      <button 
+        onclick="toggleTheme()" 
+        class="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-muted-adaptive hover:text-adaptive hover:bg-white/10 transition-colors"
+      >
+        <i data-lucide="moon" data-theme-icon class="w-5 h-5"></i>
+        <span class="font-medium">{tr('theme')}</span>
+      </button>
+      <div class="flex gap-2">
+        <button 
+          onclick="setLanguage('fr')" 
+          class="flex-1 px-3 py-2 rounded-lg text-sm bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 transition-colors"
+        >
+          🇫🇷 FR
+        </button>
+        <button 
+          onclick="setLanguage('en')" 
+          class="flex-1 px-3 py-2 rounded-lg text-sm bg-white/5 text-muted-adaptive hover:bg-white/10 transition-colors"
+        >
+          🇬🇧 EN
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,120 @@
+---
+import '../styles/global.css';
+import Navbar from '../components/Navbar.astro';
+import MobileMenu from '../components/MobileMenu.astro';
+import Footer from '../components/Footer.astro';
+import type { Language } from '../i18n/translations';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title: string;
+  description?: string;
+  lang?: Language;
+  activePage?: 'home' | 'gallery' | 'projects' | 'contact';
+}
+
+const url = new URL(Astro.url);
+const langParam = url.searchParams.get('lang') as Language | null;
+const lang: Language = (langParam && (langParam === 'en' || langParam === 'fr')) ? langParam : (Astro.props.lang || 'fr');
+
+const { 
+  title, 
+  description = 'Portfolio de Smeax - Développeur Web Frontend & Semi-Backend',
+  activePage = 'home'
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang={lang} class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta name="theme-color" content="#020617" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" type="image/png" href="/icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <ClientRouter />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/project-showcase.png" />
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest" is:inline></script>
+
+  <script is:inline>
+    // Theme initialization (blocking to prevent flash)
+    (function() {
+      const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      if (theme === 'light') {
+        document.documentElement.classList.add('light');
+      } else {
+        document.documentElement.classList.remove('light');
+      }
+    })();
+  </script>
+</head>
+<body class="antialiased font-sans">
+  <Navbar activePage={activePage} lang={lang} transition:persist />
+  <MobileMenu activePage={activePage} lang={lang} transition:persist />
+  
+  <div id="content-wrap">
+    <main class="relative w-full max-w-7xl mx-auto px-4 md:px-6 pt-32 pb-8 overflow-x-hidden">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+  </div>
+
+  <script is:inline>
+    function initApp() {
+      // Re-initialize Lucide
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+
+      // Sync theme icons
+      const isLight = document.documentElement.classList.contains('light');
+      const icons = document.querySelectorAll('[data-theme-icon]');
+      icons.forEach(icon => {
+        icon.setAttribute('data-lucide', isLight ? 'sun' : 'moon');
+      });
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    // Initial load
+    document.addEventListener('DOMContentLoaded', initApp);
+    // After View Transition
+    document.addEventListener('astro:after-swap', initApp);
+
+    // Theme toggle
+    window.toggleTheme = function() {
+      const isLight = document.documentElement.classList.toggle('light');
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+      initApp();
+    };
+
+    // Mobile menu
+    window.toggleMobileMenu = function() {
+      const menu = document.getElementById('mobile-menu');
+      if (menu) {
+        menu.classList.toggle('active');
+      }
+    };
+
+    // Language switcher
+    window.setLanguage = function(newLang) {
+      localStorage.setItem('lang', newLang);
+      const url = new URL(window.location.href);
+      url.searchParams.set('lang', newLang);
+      window.location.href = url.pathname + url.search;
+    };
+  </script>
+</body>
+</html>

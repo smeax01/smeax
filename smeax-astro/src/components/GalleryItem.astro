@@ -1,0 +1,33 @@
+---
+interface Props {
+  id: string;
+  title: string;
+  category: string;
+  thumbnail: string;
+  fullSize: string;
+  description: string;
+}
+
+const { id, title, category, thumbnail, fullSize, description } = Astro.props;
+---
+
+<a 
+  href={fullSize}
+  class="glightbox gallery-item rounded-2xl bg-midnight-light border border-white/5 overflow-hidden group"
+  data-gallery="gallery1"
+  data-title={title}
+  data-description={`${category} - ${description}`}
+>
+  <img 
+    src={thumbnail} 
+    alt={title} 
+    class="w-full h-full object-cover"
+    loading="lazy"
+  />
+  <div class="gallery-overlay">
+    <div class="text-white">
+      <h3 class="font-semibold text-lg">{title}</h3>
+      <p class="text-sm text-gray-300">{category}</p>
+    </div>
+  </div>
+</a>
