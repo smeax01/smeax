@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { t, type Language } from '../i18n/translations';
+
+const url = new URL(Astro.url);
+const langParam = url.searchParams.get('lang') as Language | null;
+const lang: Language = (langParam && (langParam === 'en' || langParam === 'fr')) ? langParam : 'fr';
+const tr = t(lang);
+---
+
+<BaseLayout title="404 - Page Not Found" lang={lang}>
+  <div class="min-h-[60vh] flex flex-col items-center justify-center text-center space-y-8">
+    <div class="relative">
+      <h1 class="text-9xl font-black text-transparent bg-clip-text bg-gradient-to-b from-blue-500/20 to-transparent select-none">
+        404
+      </h1>
+      <div class="absolute inset-0 flex items-center justify-center">
+        <i data-lucide="search-x" class="w-20 h-20 text-blue-500 animate-pulse"></i>
+      </div>
+    </div>
+
+    <div class="space-y-4">
+      <h2 class="text-3xl font-bold text-adaptive">Oups! Page introuvable</h2>
+      <p class="text-muted-adaptive max-w-md mx-auto">
+        La page que vous recherchez semble avoir disparu dans le cyberespace ou n'a jamais existé.
+      </p>
+    </div>
+
+    <a 
+      href={`${import.meta.env.BASE_URL}/?lang=${lang}`} 
+      class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-medium transition-all transform hover:scale-105"
+    >
+      <i data-lucide="arrow-left" class="w-4 h-4"></i>
+      <span>Retour à l'accueil</span>
+    </a>
+  </div>
+</BaseLayout>
