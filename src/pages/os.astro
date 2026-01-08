@@ -1,0 +1,901 @@
+---
+import OsLayout from "../layouts/OsLayout.astro";
+
+const apps = [
+  { id: "about", title: "About.md", icon: "user", color: "text-blue-400" },
+  { id: "projects", title: "Projects.ts", icon: "folder-git-2", color: "text-green-400" },
+  { id: "terminal", title: "Terminal", icon: "terminal", color: "text-purple-400" },
+  { id: "settings", title: "Settings", icon: "settings", color: "text-slate-400" },
+];
+---
+
+<OsLayout title="Smeax OS">
+  <!-- Desktop Background & Grid (Modern Dev Theme) -->
+  <div class="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat overflow-hidden select-none" style="background-image: url('/wallpaper.png');">
+    <!-- Overlay for better text readability -->
+    <div class="absolute inset-0 bg-black/30 pointer-events-none"></div>
+    
+    <!-- Fine Grid -->
+    <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
+    
+    <!-- Vignette -->
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#000000_100%)] pointer-events-none opacity-60"></div>
+    
+    <!-- Selection Box -->
+    <div id="selection-box" class="fixed border border-blue-500/50 bg-blue-500/20 rounded z-[9999]" style="display: none;"></div>
+
+    <!-- Desktop Icons Container (Absolute Layout) -->
+    <div id="desktop-icons-container" class="absolute inset-0 z-10 p-0 pointer-events-auto">
+      {apps.map((app) => (
+        <div
+          data-app-id={app.id}
+          class="desktop-icon absolute flex flex-col items-center gap-1.5 p-2 rounded-lg transition-colors w-[100px] cursor-pointer hover:bg-white/10 group select-none"
+          style="top: 20px; left: 20px;" 
+        >
+           <div class={`w-14 h-14 rounded-xl flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900 shadow-xl border border-white/10 group-hover:scale-105 transition-transform duration-200 text-white`}>
+             <i data-lucide={app.icon} class="w-7 h-7"></i>
+           </div>
+          <span class="text-[11px] font-medium text-white/90 drop-shadow-md text-center leading-tight bg-black/40 px-2 py-0.5 rounded-md backdrop-blur-sm group-hover:bg-blue-600 transition-colors">{app.title}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Windows Container -->
+  <div id="windows-container" class="absolute inset-0 pointer-events-none z-20 overflow-hidden">
+    <!-- Windows will be injected here via JS -->
+  </div>
+
+  <!-- Shadow 2 Styled Dock -->
+  <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-auto w-full max-w-fit px-4 sm:px-0">
+    <div
+      class="taskbar h-14 bg-slate-900/70 backdrop-blur-2xl border border-white/10 rounded-2xl flex items-center gap-1 px-3 shadow-2xl mx-auto w-fit"
+    >
+      <!-- Start Button -->
+      <button
+        id="start-btn"
+        class="w-10 h-10 flex items-center justify-center hover:bg-white/10 rounded-xl transition-all active:scale-90 group mr-2"
+      >
+        <img
+          src={`${import.meta.env.BASE_URL}/icon.png`}
+          alt="Start"
+          class="w-6 h-6 object-contain group-hover:rotate-12 transition-transform opacity-90"
+        />
+      </button>
+
+      <div class="h-6 w-[1px] bg-white/10 mx-1"></div>
+
+      <!-- Dock Apps -->
+      <div class="flex items-center gap-1" id="taskbar-apps">
+        {apps.map((app) => (
+          <button
+            class="app-btn w-10 h-10 flex items-center justify-center hover:bg-white/10 rounded-xl transition-all active:scale-90 group relative"
+            title={app.title}
+            data-dock-id={app.id}
+          >
+            <i
+              data-lucide={app.icon}
+              class={`w-5 h-5 ${app.color.replace('text-', 'text-white/70 group-hover:text-')} transition-colors`}
+            ></i>
+            <div
+              class="indicator absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-blue-500 rounded-full opacity-0 transition-all duration-300"
+            >
+            </div>
+             <!-- Old Tooltip style removed in favor of native title or cleaner look -->
+          </button>
+        ))}
+      </div>
+
+      <div class="h-6 w-[1px] bg-white/10 mx-2"></div>
+
+      <!-- Clock -->
+      <div
+        class="flex items-center gap-3 px-2 font-bold text-[12px] text-white/80 select-none min-w-[40px] justify-center"
+      >
+        <span id="taskbar-time">00:00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Context Menu Hint (Optional) -->
+  <div class="fixed bottom-24 w-full text-center text-white/20 text-xs pointer-events-none sm:hidden">
+    Tap icons to open
+  </div>
+
+</OsLayout>
+
+<script is:inline>
+  (function() {
+      // Logic for Clock
+      function updateTime() {
+        const now = new Date();
+        const timeEl = document.getElementById("taskbar-time");
+        if (timeEl) {
+          timeEl.textContent = now.toLocaleTimeString("fr-FR", {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+        }
+      }
+      setInterval(updateTime, 1000);
+      updateTime();
+
+      // App Definitions including Iframe support
+      const appsDef = {
+          'about': { type: 'html', title: 'About' },
+          'projects': { type: 'html', title: 'Projects' },
+          'terminal': { type: 'html', title: 'Terminal' },
+          'settings': { type: 'html', title: 'Settings' },
+          'browser': { type: 'iframe', title: 'Browser', url: 'https://www.google.com/webhp?igu=1' }, // Example iframe
+          'vscode': { type: 'iframe', title: 'VS Code', url: 'https://github1s.com/smeax01/smeax' } // Example repo viewer
+      };
+
+      // Window content templates (HTML)
+      const contentTemplates = {
+        terminal: `
+          <div class="font-mono text-sm p-4 text-slate-300 h-full overflow-y-auto select-text bg-black/80">
+            <div class="mb-2 text-green-400">➜  ~  neofetch</div>
+            <div class="grid grid-cols-[100px_1fr] gap-4 mb-4">
+              <div class="text-purple-400 select-none">
+                Using
+                <br/>SmeaxOS
+                <br/>------
+                <br/>(o_o)
+              </div>
+              <div class="space-y-1">
+                <p><span class="text-blue-400">OS</span>: SmeaxOS v1.0.0 (Web)</p>
+                <p><span class="text-blue-400">Kernel</span>: Astro 5.0</p>
+                <p><span class="text-blue-400">Uptime</span>: Just now</p>
+                <p><span class="text-blue-400">Shell</span>: zsh</p>
+              </div>
+            </div>
+            <div class="mb-2 text-green-400">➜  ~  <span class="animate-pulse">_</span></div>
+          </div>
+        `,
+        about: `
+          <div class="p-8 h-full overflow-y-auto text-slate-200 flex flex-col items-center justify-center text-center">
+            <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-purple-500 to-blue-500 flex items-center justify-center text-4xl font-bold text-white shadow-2xl mb-6">S</div>
+            <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400 mb-2">Smeax</h1>
+            <p class="text-slate-400 mb-8">Full Stack Developer & UI/UX Designer</p>
+            <div class="bg-white/5 p-6 rounded-2xl border border-white/10 max-w-md text-left font-mono text-sm">
+              <p><span class="text-purple-400">const</span> <span class="text-yellow-400">profile</span> = {</p>
+              <p class="pl-4">name: <span class="text-green-400">"Smeax"</span>,</p>
+              <p class="pl-4">role: <span class="text-green-400">"Dev"</span>,</p>
+              <p class="pl-4">skills: [<span class="text-green-400">"Astro"</span>, <span class="text-green-400">"React"</span>, <span class="text-green-400">"Node"</span>]</p>
+              <p>};</p>
+            </div>
+          </div>
+        `,
+        projects: `
+          <div class="p-4 h-full overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="group relative bg-slate-900/50 border border-white/10 rounded-xl p-4 hover:bg-white/5 hover:border-purple-500/50 transition-all cursor-pointer">
+              <div class="flex items-center gap-3 mb-3">
+                 <div class="p-2 rounded-lg bg-purple-500/20 text-purple-400"><i data-lucide="layout" class="w-5 h-5"></i></div>
+                 <h3 class="font-bold text-slate-200">Portfolio V2</h3>
+              </div>
+              <p class="text-xs text-slate-400 mb-3">Main portfolio website built with Astro and Tailwind.</p>
+              <span class="text-[10px] bg-white/10 px-2 py-1 rounded-full text-slate-300">TypeScript</span>
+            </div>
+             <div class="group relative bg-slate-900/50 border border-white/10 rounded-xl p-4 hover:bg-white/5 hover:border-blue-500/50 transition-all cursor-pointer">
+              <div class="flex items-center gap-3 mb-3">
+                 <div class="p-2 rounded-lg bg-blue-500/20 text-blue-400"><i data-lucide="globe" class="w-5 h-5"></i></div>
+                 <h3 class="font-bold text-slate-200">Smeax API</h3>
+              </div>
+              <p class="text-xs text-slate-400 mb-3">Backend services and utilities.</p>
+               <span class="text-[10px] bg-white/10 px-2 py-1 rounded-full text-slate-300">Node.js</span>
+            </div>
+          </div>
+        `,
+        settings: `
+           <div class="p-6 h-full text-slate-200">
+            <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+              <i data-lucide="settings" class="w-6 h-6"></i> Settings
+            </h2>
+            <div class="space-y-4">
+              <div class="flex justify-between items-center p-4 bg-white/5 rounded-xl border border-white/5">
+                 <span class="text-sm font-medium">Dark Mode</span>
+                 <div class="w-12 h-6 bg-purple-600 rounded-full relative cursor-pointer opacity-100 transition-opacity">
+                   <div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full shadow-sm"></div>
+                 </div>
+              </div>
+            </div>
+          </div>
+        `
+      };
+
+      class DesktopManager {
+        constructor() {
+          this.container = document.getElementById('desktop-icons-container');
+          this.selectionBox = document.getElementById('selection-box');
+          this.isDragging = false;
+          this.isSelecting = false;
+          this.draggedItem = null;
+          this.startPos = { x: 0, y: 0 };
+          this.selectionStart = { x: 0, y: 0 };
+          this.gridSize = { w: 100, h: 110 }; // Grid cell size
+          this.holdTimer = null;
+          
+          this.init();
+        }
+        
+        init() {
+            // Initialize positions for existing icons
+            const icons = this.container.querySelectorAll('.desktop-icon');
+            icons.forEach((icon, index) => {
+                const cols = Math.floor((window.innerHeight - 60) / this.gridSize.h);
+                const col = Math.floor(index / cols);
+                const row = index % cols;
+                
+                icon.style.left = (20 + col * this.gridSize.w) + 'px';
+                icon.style.top = (20 + row * this.gridSize.h) + 'px';
+                
+                this.makeDraggable(icon);
+            });
+
+            // Selection Box Logic (Desktop)
+            const bg = this.container.parentElement;
+            bg.addEventListener('mousedown', (e) => this.startSelection(e));
+            document.addEventListener('mousemove', (e) => this.updateSelection(e));
+            document.addEventListener('mouseup', () => this.endSelection());
+
+            // Android-like Mobile Logic (Long press background to select? Or just drag??)
+            // Windows usually doesn't have selection box on mobile touch.
+            // But dragging icons is needed.
+            // Touching background normally scrolls.
+            
+            // let's enable simple touch for selection box if using 2 fingers? No, too complex.
+            // Just single finger drag on background = selection box.
+            // Touch move on icon = drag icon.
+            
+            bg.addEventListener('touchstart', (e) => {
+                 if(e.touches.length === 1 && !e.target.closest('.desktop-icon') && !e.target.closest('.window')) {
+                     // Start selection on background touch? Or allow scroll?
+                     // Body is overflow hidden, so no scroll.
+                     const touch = e.touches[0];
+                     this.startSelection({ 
+                         clientX: touch.clientX, 
+                         clientY: touch.clientY, 
+                         target: e.target 
+                     });
+                 }
+            }, {passive: false});
+            
+            document.addEventListener('touchmove', (e) => {
+                 if(this.isSelecting || this.isDragging) {
+                     //e.preventDefault(); // Prevent scroll if dragging/selecting
+                     const touch = e.touches[0];
+                     this.updateSelection({
+                         clientX: touch.clientX,
+                         clientY: touch.clientY
+                     });
+                 }
+            }, {passive: false});
+
+            document.addEventListener('touchend', () => this.endSelection());
+        }
+        
+        makeDraggable(icon) {
+            const startDrag = (clientX, clientY) => {
+                this.isDragging = true;
+                this.draggedItem = icon;
+                this.startPos = {
+                    x: clientX - icon.offsetLeft,
+                    y: clientY - icon.offsetTop
+                };
+                icon.classList.add('z-50', 'scale-105');
+            };
+
+            icon.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                e.stopPropagation(); 
+                startDrag(e.clientX, e.clientY);
+            });
+            
+            icon.addEventListener('touchstart', (e) => {
+                e.stopPropagation(); // Don't trigger bg selection
+                const touch = e.touches[0];
+                startDrag(touch.clientX, touch.clientY);
+            }, {passive: false});
+        }
+        
+        startSelection(e) {
+            if(e.target !== this.container && e.target !== this.container.parentElement) return;
+            this.isSelecting = true;
+            this.selectionStart = { x: e.clientX, y: e.clientY };
+            this.selectionBox.style.display = 'block';
+            this.selectionBox.style.left = e.clientX + 'px';
+            this.selectionBox.style.top = e.clientY + 'px';
+            this.selectionBox.style.width = '0px';
+            this.selectionBox.style.height = '0px';
+            
+            this.container.querySelectorAll('.desktop-icon').forEach(el => el.classList.remove('bg-white/10', 'ring-1', 'ring-white/20'));
+        }
+        
+        updateSelection(e) {
+            if (this.isDragging && this.draggedItem) {
+                this.draggedItem.style.left = (e.clientX - this.startPos.x) + 'px';
+                this.draggedItem.style.top = (e.clientY - this.startPos.y) + 'px';
+                return;
+            }
+            
+            if (this.isSelecting) {
+                const currentX = e.clientX;
+                const currentY = e.clientY;
+                
+                const width = Math.abs(currentX - this.selectionStart.x);
+                const height = Math.abs(currentY - this.selectionStart.y);
+                const left = Math.min(currentX, this.selectionStart.x);
+                const top = Math.min(currentY, this.selectionStart.y);
+                
+                this.selectionBox.style.width = width + 'px';
+                this.selectionBox.style.height = height + 'px';
+                this.selectionBox.style.left = left + 'px';
+                this.selectionBox.style.top = top + 'px';
+                
+                this.container.querySelectorAll('.desktop-icon').forEach(icon => {
+                    const rect = icon.getBoundingClientRect();
+                    if (left < rect.right && left + width > rect.left && top < rect.bottom && top + height > rect.top) {
+                         icon.classList.add('bg-white/10', 'ring-1', 'ring-white/20');
+                    } else {
+                         icon.classList.remove('bg-white/10', 'ring-1', 'ring-white/20');
+                    }
+                });
+            }
+        }
+        
+        endSelection() {
+            if (this.isDragging && this.draggedItem) {
+                const left = parseInt(this.draggedItem.style.left);
+                const top = parseInt(this.draggedItem.style.top);
+                
+                const col = Math.max(0, Math.round((left - 20) / this.gridSize.w));
+                const row = Math.max(0, Math.round((top - 20) / this.gridSize.h));
+                
+                this.draggedItem.style.left = (20 + col * this.gridSize.w) + 'px';
+                this.draggedItem.style.top = (20 + row * this.gridSize.h) + 'px';
+
+                this.draggedItem.classList.remove('z-50', 'scale-105');
+                this.isDragging = false;
+                this.draggedItem = null;
+            }
+            if (this.isSelecting) {
+                this.isSelecting = false;
+                this.selectionBox.style.display = 'none';
+            }
+        }
+      }
+
+      class WindowManager {
+        constructor() {
+          this.container = document.getElementById('windows-container');
+          this.windows = new Map(); // id -> element
+          this.zIndex = 100;
+          this.activeWindow = null;
+          this.isMobile = window.innerWidth < 640;
+          
+          this.init();
+        }
+
+        init() {
+          // Desktop Icon Clicks
+          document.querySelectorAll('.desktop-icon').forEach(btn => {
+            btn.addEventListener('dblclick', (e) => { // Double click for desktop behavior
+              const id = e.currentTarget.getAttribute('data-app-id');
+              this.openWindow(id);
+            });
+            // Touch support for mobile tap
+             btn.addEventListener('touchend', (e) => {
+                 // Simple loose detection for tap
+                 const id = e.currentTarget.getAttribute('data-app-id');
+                 this.openWindow(id);
+            });
+          });
+          
+          // Selection box (desktop background)
+          // initialized in DesktopManager
+
+          // Dock Icon Clicks
+          document.querySelectorAll('.app-btn').forEach(btn => {
+             btn.onclick = (e) => {
+              const id = e.currentTarget.getAttribute('data-dock-id');
+              this.toggleWindow(id);
+            };
+          });
+
+          // Start Button (Placeholder)
+          const startBtn = document.getElementById('start-btn');
+          if(startBtn) {
+              startBtn.onclick = () => {
+                  const winId = 'about';
+                  this.toggleWindow(winId);
+              }
+          }
+
+          // Resize listener
+          window.onresize = () => {
+             const newIsMobile = window.innerWidth < 640;
+             if(newIsMobile !== this.isMobile) {
+                 this.isMobile = newIsMobile;
+             }
+          };
+        }
+
+        createWindow(id, title) {
+            const win = document.createElement('div');
+            
+            // Setup styles (Less rounded, no shadow/glow as requested)
+            let baseClasses = 'window absolute bg-slate-900/95 backdrop-blur-2xl flex flex-col overflow-hidden transition-all duration-300 pointer-events-auto border border-white/10';
+            
+            if (this.isMobile) {
+                baseClasses += ' fixed top-0 left-0 w-full h-[calc(100vh-80px)] rounded-none border-0';
+            } else {
+                baseClasses += ' rounded-lg'; // Less rounded
+            }
+            
+            win.className = baseClasses;
+            win.id = `window-${id}`;
+            win.style.minWidth = '320px';
+            win.style.minHeight = '200px';
+            
+            // Center Position for Desktop
+            if(!this.isMobile) {
+                const width = 800;
+                const height = 500;
+                const left = (window.innerWidth - width) / 2;
+                const top = (window.innerHeight - height) / 2 - 20; 
+
+                win.style.width = width + 'px';
+                win.style.height = height + 'px';
+                win.style.left = left + 'px';
+                win.style.top = top + 'px';
+            }
+
+            win.style.zIndex = ++this.zIndex;
+
+            // Determine content
+            const appDef = appsDef[id];
+            let contentHTML = '';
+            
+            if (appDef && appDef.type === 'iframe') {
+                contentHTML = `<iframe src="${appDef.url}" class="w-full h-full border-none bg-white"></iframe>`;
+            } else {
+                contentHTML = contentTemplates[id] || '<div class="p-8 text-center text-slate-400">App not found</div>';
+            }
+
+            // MacOS Controls HTML (Right aligned, symbols hidden until hover)
+            // Added Snap Menu (hidden by default)
+            win.innerHTML = `
+              <!-- Resize Handles -->
+              <div class="resize-handle resize-r absolute right-0 top-0 w-1 h-full cursor-e-resize z-50 hover:bg-white/10 transition-colors"></div>
+              <div class="resize-handle resize-b absolute bottom-0 left-0 w-full h-1 cursor-s-resize z-50 hover:bg-white/10 transition-colors"></div>
+              <div class="resize-handle resize-br absolute bottom-0 right-0 w-4 h-4 cursor-se-resize z-50 hover:bg-white/10 rounded-tl transition-colors"></div>
+
+              <!-- Titlebar -->
+              <div class="window-header h-11 bg-transparent flex items-center justify-between px-4 cursor-grab active:cursor-grabbing select-none group/header relative z-40">
+                 <div class="w-10"></div> <!-- Spacer -->
+                 <div class="text-sm font-medium text-slate-400/80 pointer-events-none select-none">
+                    ${title}
+                 </div>
+                 <div class="flex items-center gap-2 relative">
+                    <button class="win-btn minimize-btn group/btn w-3 h-3 rounded-full bg-[#FFBD2E] border border-[#DEA123] flex items-center justify-center text-[8px] text-black font-bold shadow-sm hover:scale-110 transition-transform">
+                       <span class="opacity-0 group-hover/btn:opacity-100 transition-opacity">−</span>
+                    </button>
+                    
+                    <div class="relative group/snap">
+                        <button class="win-btn maximize-btn group/btn w-3 h-3 rounded-full bg-[#27C93F] border border-[#1AAB29] flex items-center justify-center text-[8px] text-black font-bold shadow-sm hover:scale-110 transition-transform">
+                           <span class="opacity-0 group-hover/btn:opacity-100 transition-opacity">＋</span>
+                        </button>
+                        
+                        <!-- Snap Menu Popup -->
+                        <!-- Using pt-4 to bridge dragging gap instead of margin -->
+                        <div class="snap-menu absolute top-full right-0 pt-3 w-32 opacity-0 pointer-events-none transition-all duration-200 transform scale-95 origin-top-right z-[100]">
+                            <div class="bg-slate-800/95 border border-white/10 rounded-lg shadow-xl p-2 grid grid-cols-2 gap-1">
+                                <div class="snap-option w-full h-8 bg-white/5 hover:bg-white/20 rounded border border-white/5 cursor-pointer flex items-center justify-center" data-snap="left" title="Left Half">
+                                    <div class="w-2 h-4 bg-white/50 border-r border-white/20"></div>
+                                </div>
+                                <div class="snap-option w-full h-8 bg-white/5 hover:bg-white/20 rounded border border-white/5 cursor-pointer flex items-center justify-center" data-snap="right" title="Right Half">
+                                    <div class="w-2 h-4 bg-white/50 border-l border-white/20 ml-auto"></div>
+                                </div>
+                                <div class="snap-option w-full h-8 bg-white/5 hover:bg-white/20 rounded border border-white/5 cursor-pointer flex items-center justify-center" data-snap="top" title="Top Half">
+                                    <div class="w-4 h-2 bg-white/50 border-b border-white/20 mb-auto"></div>
+                                </div>
+                                <div class="snap-option w-full h-8 bg-white/5 hover:bg-white/20 rounded border border-white/5 cursor-pointer flex items-center justify-center" data-snap="bottom" title="Bottom Half">
+                                    <div class="w-4 h-2 bg-white/50 border-t border-white/20 mt-auto"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="win-btn close-btn group/btn w-3 h-3 rounded-full bg-[#FF5F56] border border-[#E0443E] flex items-center justify-center text-[8px] text-black font-bold shadow-sm hover:scale-110 transition-transform">
+                       <span class="opacity-0 group-hover/btn:opacity-100 transition-opacity">✕</span>
+                    </button>
+                 </div>
+              </div>
+              <!-- Content -->
+              <div class="window-content flex-1 relative overflow-hidden bg-[#0d1117]">
+                ${contentHTML}
+              </div>
+            `;
+
+            // Attach events
+            win.querySelector('.close-btn').addEventListener('click', (e) => { e.stopPropagation(); this.closeWindow(id); });
+            win.querySelector('.minimize-btn').addEventListener('click', (e) => { e.stopPropagation(); this.minimizeWindow(id); });
+            
+            // Maximize / Snap Logic
+            const maxBtn = win.querySelector('.maximize-btn');
+            const snapMenu = win.querySelector('.snap-menu');
+            let hoverTimer;
+            let hideTimer;
+
+            // Desktop Hover Logic
+            if (!this.isMobile) {
+                const showMenu = () => {
+                    clearTimeout(hideTimer);
+                    hoverTimer = setTimeout(() => {
+                        snapMenu.classList.remove('opacity-0', 'pointer-events-none', 'scale-95');
+                        snapMenu.classList.add('opacity-100', 'pointer-events-auto', 'scale-100');
+                    }, 500);
+                };
+
+                const hideMenu = () => {
+                    clearTimeout(hoverTimer);
+                    hideTimer = setTimeout(() => {
+                        snapMenu.classList.add('opacity-0', 'pointer-events-none', 'scale-95');
+                        snapMenu.classList.remove('opacity-100', 'pointer-events-auto', 'scale-100');
+                    }, 400); // 400ms grace period to move mouse
+                };
+
+                win.querySelector('.group\\/snap').addEventListener('mouseenter', showMenu);
+                win.querySelector('.group\\/snap').addEventListener('mouseleave', hideMenu);
+            }
+
+            // Mobile Long Press Logic
+            if (this.isMobile) {
+                let pressTimer;
+                maxBtn.addEventListener('touchstart', (e) => {
+                    pressTimer = setTimeout(() => {
+                       snapMenu.classList.remove('opacity-0', 'pointer-events-none', 'scale-95');
+                       snapMenu.classList.add('opacity-100', 'pointer-events-auto', 'scale-100');
+                    }, 500); // 500ms long press
+                }, {passive: true});
+                maxBtn.addEventListener('touchend', () => clearTimeout(pressTimer));
+                
+                // Hide menu when tapping elsewhere inside the header
+                win.querySelector('.window-header').addEventListener('click', (e) => {
+                    if(!e.target.closest('.group\\/snap')) {
+                        snapMenu.classList.add('opacity-0', 'pointer-events-none', 'scale-95');
+                    }
+                });
+            }
+
+            maxBtn.addEventListener('click', (e) => {
+                 e.stopPropagation();
+                 this.maximizeWindow(id, win);
+                 snapMenu.classList.add('opacity-0', 'pointer-events-none', 'scale-95');
+            });
+            
+            // Snap Options Click
+            win.querySelectorAll('.snap-option').forEach(opt => {
+                opt.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const type = opt.dataset.snap;
+                    this.snapWindow(id, win, type);
+                    snapMenu.classList.add('opacity-0', 'pointer-events-none', 'scale-95');
+                });
+            });
+
+            const focusHandler = () => this.focusWindow(id);
+            win.addEventListener('mousedown', focusHandler);
+            win.addEventListener('touchstart', focusHandler, {passive: true});
+
+            // Dragging Logic
+            const header = win.querySelector('.window-header');
+            this.makeDraggable(win, header);
+            
+            // Re-sizing Logic (Desktop Only)
+            if(!this.isMobile) {
+                this.makeResizable(win);
+            }
+
+            this.container.appendChild(win);
+            this.windows.set(id, win);
+            
+            this.updateDockIndicator(id, true);
+
+            requestAnimationFrame(() => {
+                win.classList.remove('opacity-0', 'scale-95');
+                this.focusWindow(id);
+                this.tileWindows();
+            });
+
+            return win;
+        }
+
+        makeResizable(win) {
+            const handles = win.querySelectorAll('.resize-handle');
+            const minW = 300;
+            const minH = 200;
+            
+            handles.forEach(handle => {
+                handle.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    if(win.classList.contains('maximized') || win.classList.contains('snapped')) return; // No resize if snapped/max
+
+                    const startW = win.offsetWidth;
+                    const startH = win.offsetHeight;
+                    const startX = e.clientX;
+                    const startY = e.clientY;
+                    
+                    const isRight = handle.classList.contains('resize-r') || handle.classList.contains('resize-br');
+                    const isBottom = handle.classList.contains('resize-b') || handle.classList.contains('resize-br');
+                    
+                    const onMove = (moveEvent) => {
+                        if(isRight) {
+                            const newW = Math.max(minW, startW + (moveEvent.clientX - startX));
+                            win.style.width = newW + 'px';
+                        }
+                        if(isBottom) {
+                            const newH = Math.max(minH, startH + (moveEvent.clientY - startY));
+                            win.style.height = newH + 'px';
+                        }
+                    };
+                    
+                    const onUp = () => {
+                        document.removeEventListener('mousemove', onMove);
+                        document.removeEventListener('mouseup', onUp);
+                    };
+                    
+                    document.addEventListener('mousemove', onMove);
+                    document.addEventListener('mouseup', onUp);
+                });
+            });
+        }
+
+        tileWindows() {
+             if(this.isMobile) return;
+             // Placeholder
+        }
+        
+        snapWindow(id, win, type) {
+            // Save state if not already snapped/maximized
+            if (!win.classList.contains('maximized') && !win.classList.contains('snapped')) {
+                win.dataset.prevWidth = win.style.width;
+                win.dataset.prevHeight = win.style.height;
+                win.dataset.prevLeft = win.style.left;
+                win.dataset.prevTop = win.style.top;
+            }
+
+            win.classList.remove('maximized');
+            win.classList.add('snapped');
+            win.classList.replace('rounded-xl', 'rounded-lg'); // ensure consistency
+            
+            // Hyprland Logic: 12px Gaps
+            const gap = 12;
+            const dockHeight = 100; // Safe area
+            const screenW = window.innerWidth;
+            const screenH = window.innerHeight;
+            const availH = screenH - dockHeight - gap;
+            
+            let w, h, x, y;
+
+            switch(type) {
+                case 'left':
+                    x = gap;
+                    y = gap;
+                    w = (screenW / 2) - (1.5 * gap);
+                    h = availH;
+                    break;
+                case 'right':
+                    x = (screenW / 2) + (0.5 * gap);
+                    y = gap;
+                    w = (screenW / 2) - (1.5 * gap);
+                    h = availH;
+                    break;
+                case 'top':
+                    x = gap;
+                    y = gap;
+                    w = screenW - (2 * gap);
+                    h = (availH / 2) - (0.5 * gap);
+                    break;
+                case 'bottom':
+                    x = gap;
+                    y = (availH / 2) + (1.5 * gap);
+                    w = screenW - (2 * gap);
+                    h = (availH / 2) - (0.5 * gap);
+                    break;
+            }
+
+            win.style.width = w + 'px';
+            win.style.height = h + 'px';
+            win.style.left = x + 'px';
+            win.style.top = y + 'px';
+            win.style.borderRadius = '0.5rem';
+        }
+
+        makeDraggable(element, handle) {
+            let isDragging = false;
+            let startX, startY, initialLeft, initialTop;
+
+            const onStart = (clientX, clientY) => {
+                if(this.isMobile) return;
+                // prevent drag if maximized or snapped
+                if(element.classList.contains('maximized') || element.classList.contains('snapped')) return;
+
+                isDragging = true;
+                startX = clientX;
+                startY = clientY;
+                initialLeft = element.offsetLeft;
+                initialTop = element.offsetTop;
+                element.style.transition = 'none';
+                element.style.zIndex = ++this.zIndex;
+            };
+
+            const onMove = (clientX, clientY) => {
+                if (!isDragging) return;
+                const dx = clientX - startX;
+                const dy = clientY - startY;
+                element.style.left = (initialLeft + dx) + 'px';
+                element.style.top = (initialTop + dy) + 'px';
+            };
+
+            const onEnd = () => {
+                isDragging = false;
+                element.style.transition = 'all 0.2s';
+            };
+
+            handle.addEventListener('mousedown', (e) => onStart(e.clientX, e.clientY));
+            window.addEventListener('mousemove', (e) => onMove(e.clientX, e.clientY));
+            window.addEventListener('mouseup', onEnd);
+            handle.addEventListener('touchstart', (e) => {
+                const touch = e.touches[0];
+                onStart(touch.clientX, touch.clientY);
+            }, {passive: false}); 
+            window.addEventListener('touchmove', (e) => {
+                 if(isDragging) {
+                     e.preventDefault();
+                     const touch = e.touches[0];
+                     onMove(touch.clientX, touch.clientY);
+                 }
+            }, {passive: false});
+            window.addEventListener('touchend', onEnd);
+        }
+
+        openWindow(id) {
+            let win = this.windows.get(id);
+            const title = appsDef[id]?.title || 'App';
+            
+            if (!win) {
+                win = this.createWindow(id, title);
+            } else {
+                 win.style.display = 'flex';
+                 setTimeout(() => {
+                     win.classList.remove('opacity-0', 'scale-95', 'translate-y-10');
+                     // Smart re-center if not maximized and on desktop
+                     if(!this.isMobile && !win.classList.contains('maximized')) {
+                         const width = 800;
+                         const height = 500;
+                         win.style.width = width + 'px';
+                         win.style.height = height + 'px';
+                         win.style.left = ((window.innerWidth - width) / 2) + 'px';
+                         win.style.top = ((window.innerHeight - height) / 2 - 20) + 'px';
+                     }
+                 }, 10);
+            }
+            this.focusWindow(id);
+        }
+        
+        toggleWindow(id) {
+            let win = this.windows.get(id);
+            if(!win) {
+                this.openWindow(id);
+            } else {
+                if(win.style.display === 'none' || win.classList.contains('opacity-0')) {
+                    this.openWindow(id);
+                } else {
+                    if(this.activeWindow === id) {
+                        this.minimizeWindow(id);
+                    } else {
+                        this.focusWindow(id);
+                    }
+                }
+            }
+        }
+
+        closeWindow(id) {
+            const win = this.windows.get(id);
+            if (win) {
+                win.classList.add('opacity-0', 'scale-95');
+                setTimeout(() => {
+                    win.remove();
+                    this.windows.delete(id);
+                    if(this.activeWindow === id) this.activeWindow = null;
+                    this.updateDockIndicator(id, false);
+                }, 200);
+            }
+        }
+
+        minimizeWindow(id) {
+            const win = this.windows.get(id);
+            if (win) {
+                win.classList.add('opacity-0', 'scale-95', 'translate-y-20');
+                setTimeout(() => {
+                    win.style.display = 'none';
+                }, 200);
+            }
+        }
+
+        maximizeWindow(id, win) {
+            if(this.isMobile) return; 
+            
+            if (win.classList.contains('maximized') || win.classList.contains('snapped')) {
+                win.classList.remove('maximized', 'snapped');
+                win.style.width = win.dataset.prevWidth || '800px';
+                win.style.height = win.dataset.prevHeight || '500px';
+                win.style.left = win.dataset.prevLeft || '100px';
+                win.style.top = win.dataset.prevTop || '100px';
+                win.style.borderRadius = '0.5rem'; // rounded-lg
+            } else {
+                win.dataset.prevWidth = win.style.width;
+                win.dataset.prevHeight = win.style.height;
+                win.dataset.prevLeft = win.style.left;
+                win.dataset.prevTop = win.style.top;
+                
+                win.classList.add('maximized');
+                win.classList.remove('snapped');
+                
+                // Hyprland Gap Logic: 12px gap
+                const gap = 12;
+                const dockHeightWithGap = 100; // Safe area
+                
+                win.style.width = `calc(100% - ${gap*2}px)`;
+                win.style.height = `calc(100% - ${dockHeightWithGap}px)`;
+                win.style.left = `${gap}px`;
+                win.style.top = `${gap}px`;
+                
+                win.style.borderRadius = '0.5rem'; // Keep rounded corners
+            }
+        }
+
+        focusWindow(id) {
+            const win = this.windows.get(id);
+            if (win) {
+                win.style.zIndex = ++this.zIndex;
+                // Simple focus state: just slightly brighter border
+                this.windows.forEach((w, key) => {
+                   if(key === id) {
+                       w.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                   } else {
+                       w.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                   }
+                });
+                this.activeWindow = id;
+            }
+        }
+
+        updateDockIndicator(id, isActive) {
+            const dockBtn = document.querySelector(`.app-btn[data-dock-id="${id}"] .indicator`);
+            if(dockBtn) {
+                dockBtn.style.opacity = isActive ? '1' : '0';
+            }
+        }
+      }
+
+      // Start
+      function initOS() {
+          if(!document.getElementById('windows-container')) return;
+          new WindowManager();
+          new DesktopManager();
+          if(window.lucide) window.lucide.createIcons();
+      }
+
+      // Use a timeout to ensure DOM is fully ready especially with astro transitions
+      if (document.readyState === 'complete') {
+          initOS();
+      } else {
+          document.addEventListener('DOMContentLoaded', initOS);
+      }
+      document.addEventListener('astro:page-load', initOS);
+  })();
+</script>

@@ -43,20 +43,63 @@ const navLinks = [
   <nav
     class="pointer-events-auto w-full max-w-[98%] md:max-w-7xl h-14 card-bg rounded-xl px-4 flex items-center justify-between shadow-none transition-all duration-300"
   >
-    <a
-      href={`${import.meta.env.BASE_URL}/?lang=${lang}`}
-      class="flex items-center gap-3 py-2 px-2 -ml-2 rounded-lg hover:bg-white/5 transition-colors group shrink-0"
-    >
-      <img
-        src={`${import.meta.env.BASE_URL}/icon.png`}
-        alt="Smeax"
-        class="w-8 h-8 object-contain"
-      />
-      <span
-        class="font-bold text-adaptive tracking-tight group-hover:text-blue-500 transition-colors block"
-        >Smeax</span
+    <div class="relative group">
+      <a
+        id="smeax-logo"
+        href={`${import.meta.env.BASE_URL}/?lang=${lang}`}
+        data-base-url={import.meta.env.BASE_URL}
+        class="flex items-center gap-3 py-2 px-2 -ml-2 rounded-lg hover:bg-white/5 transition-colors group shrink-0 select-none"
       >
-    </a>
+        <img
+          src={`${import.meta.env.BASE_URL}/icon.png`}
+          alt="Smeax"
+          class="w-8 h-8 object-contain pointer-events-none"
+        />
+        <span
+          class="font-bold text-adaptive tracking-tight group-hover:text-blue-500 transition-colors block"
+          >Smeax</span
+        >
+      </a>
+      <script is:inline>
+        // Secret Long Press on Logo to access OS
+        const logo = document.getElementById("smeax-logo");
+        let pressTimer;
+
+        if (logo) {
+          const baseUrl = logo.getAttribute("data-base-url") || "/";
+
+          const startPress = (e) => {
+            // Only trigger on primary click or touch
+            if (e.type === "mousedown" && e.button !== 0) return;
+            pressTimer = setTimeout(() => {
+              // Visual feedback
+              logo.style.transform = "scale(0.9)";
+              logo.style.filter = "hue-rotate(90deg)";
+              setTimeout(() => {
+                const targetPath = baseUrl.endsWith("/")
+                  ? `${baseUrl}os`
+                  : `${baseUrl}/os`;
+                window.location.href = targetPath;
+              }, 200);
+            }, 1500); // 1.5s hold
+          };
+
+          const cancelPress = () => {
+            clearTimeout(pressTimer);
+            logo.style.transform = "";
+            logo.style.filter = "";
+          };
+
+          logo.addEventListener("mousedown", startPress);
+          logo.addEventListener("touchstart", startPress, { passive: true });
+
+          logo.addEventListener("mouseup", cancelPress);
+          logo.addEventListener("mouseleave", cancelPress);
+          logo.addEventListener("touchend", cancelPress);
+          logo.addEventListener("touchcancel", cancelPress);
+        }
+      </script>
+    </div>
     <div
       class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:flex items-center gap-1"
     >

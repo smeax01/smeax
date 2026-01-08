@@ -18,7 +18,7 @@ export const projects: Project[] = [
     id: 'hosting-platform',
     title: 'Plateforme d\'Hébergement',
     description: 'Une application web moderne pour la gestion d\'hébergements et de réservations. Interface intuitive avec un design sombre élégant, un système de recherche avancé et une gestion complète des offres.',
-    image: 'https://cdn.discordapp.com/attachments/1191059562166501550/1453864838752243763/Um0y014.png?ex=695cd865&is=695b86e5&hm=b850b3885d20495d97d2eab771c885dc2b8484d2de01e09b30c0ac47b5a9d1fb&animated=true',
+    image: '/game-host.png',
     tags: ['Application Web', 'UI/UX'],
     tech: ['HTML', 'JavaScript', 'Tailwind CSS', 'Node.js'],
     category: 'Application Web',
